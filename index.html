@@ -4,7 +4,27 @@
   <meta charset="UTF-8">
   <title>iTECHMobile Technician Dashboard</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="iTECHMobile Technician Dashboard – claim Android repair jobs, launch remote sessions, and manage your performance as a certified technician.">
+
+  <!-- SEO -->
+  <meta name="description" content="iTECHMobile Technician Dashboard – claim Android repair jobs, launch secure scrcpy sessions, and track your performance as a certified iTECHMobile technician.">
+  <meta name="robots" content="index,follow">
+  <link rel="canonical" href="https://dashboard.itechmobile.site/">
+
+  <!-- Open Graph / Social -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="iTECHMobile Technician Dashboard">
+  <meta property="og:description" content="Invite-only dashboard for certified Android repair technicians. Claim jobs, launch scrcpy in one click, and track your completion rate and earnings.">
+  <meta property="og:url" content="https://dashboard.itechmobile.site/">
+  <!-- Replace this with your actual preview image URL when you have one -->
+  <meta property="og:image" content="https://itechmobile.site/assets/dashboard-preview.png">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="iTECHMobile Technician Dashboard">
+  <meta name="twitter:description" content="Remote Android repair jobs, one-click scrcpy, and performance analytics for certified technicians.">
+  <meta name="twitter:image" content="https://itechmobile.site/assets/dashboard-preview.png">
+
+  <!-- Theme / Brand -->
   <meta name="theme-color" content="#667eea">
 
   <!-- Favicon -->
@@ -267,7 +287,19 @@
       transition: all 0.25s ease;
     }
 
-    /* MAIN GRID */
+    .hamburger.open span:nth-child(1) {
+      transform: translateY(3px) rotate(45deg);
+    }
+
+    .hamburger.open span:nth-child(2) {
+      opacity: 0;
+    }
+
+    .hamburger.open span:nth-child(3) {
+      transform: translateY(-3px) rotate(-45deg);
+    }
+
+    /* HERO */
     .hero {
       padding: 40px 0 80px;
     }
@@ -349,6 +381,29 @@
     .hero-note strong {
       color: #e5e7eb;
       font-weight: 600;
+    }
+
+    .feature-strip {
+      margin: 12px 0 34px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      font-size: 11px;
+      color: #94a3b8;
+    }
+
+    .feature-chip {
+      padding: 5px 9px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.3);
+      background: rgba(15, 23, 42, 0.75);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .feature-chip span.icon {
+      font-size: 13px;
     }
 
     /* AUTH CARD SIDE */
@@ -461,10 +516,6 @@
       background: rgba(15, 23, 42, 0.95);
     }
 
-    .input-error {
-      border-color: rgba(248, 113, 113, 0.8);
-    }
-
     .helper-text {
       font-size: 11px;
       color: #64748b;
@@ -568,31 +619,7 @@
       font-weight: 600;
     }
 
-    /* FEATURES STRIP */
-    .feature-strip {
-      margin: 12px 0 34px;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      font-size: 11px;
-      color: #94a3b8;
-    }
-
-    .feature-chip {
-      padding: 5px 9px;
-      border-radius: 999px;
-      border: 1px solid rgba(148, 163, 184, 0.3);
-      background: rgba(15, 23, 42, 0.75);
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .feature-chip span.icon {
-      font-size: 13px;
-    }
-
-    /* SECTIONS BELOW HERO */
+    /* SECTION BASE */
     .section {
       padding: 0 0 64px;
     }
@@ -761,18 +788,6 @@
       }
     }
 
-    .hamburger.open span:nth-child(1) {
-      transform: translateY(3px) rotate(45deg);
-    }
-
-    .hamburger.open span:nth-child(2) {
-      opacity: 0;
-    }
-
-    .hamburger.open span:nth-child(3) {
-      transform: translateY(-3px) rotate(-45deg);
-    }
-
     footer {
       border-top: 1px solid rgba(148, 163, 184, 0.35);
       padding: 16px 20px 26px;
@@ -800,11 +815,32 @@
     .footer-inner a:hover {
       text-decoration: underline;
     }
+
+    /* Skip link for accessibility */
+    .skip-link {
+      position: absolute;
+      top: -40px;
+      left: 12px;
+      padding: 8px 12px;
+      background: #111827;
+      color: #f9fafb;
+      border-radius: 999px;
+      font-size: 12px;
+      text-decoration: none;
+      z-index: 50;
+      transition: top 0.2s;
+    }
+
+    .skip-link:focus {
+      top: 12px;
+    }
   </style>
 </head>
 <body>
+  <a href="#main" class="skip-link">Skip to main content</a>
+
   <!-- Background orbs -->
-  <div class="bg-animated">
+  <div class="bg-animated" aria-hidden="true">
     <div class="orb orb1"></div>
     <div class="orb orb2"></div>
     <div class="orb orb3"></div>
@@ -815,14 +851,14 @@
     <div class="nav-inner">
       <div class="nav-left">
         <a href="https://itechmobile.site" class="logo">
-          <div class="logo-icon">iT</div>
+          <div class="logo-icon" aria-hidden="true">iT</div>
           <div>
             <div class="logo-text-main">iTECHMobile</div>
             <div class="logo-text-sub">Technician Dashboard</div>
           </div>
         </a>
-        <span class="badge-nav">
-          <span>●</span>
+        <span class="badge-nav" aria-label="Live job network status">
+          <span aria-hidden="true">●</span>
           <span>Live job network</span>
         </span>
       </div>
@@ -837,20 +873,20 @@
       <div class="nav-right">
         <a href="https://itechmobile.site" class="btn btn-ghost">Back to main site</a>
         <a href="#access" class="btn btn-primary">
-          <span class="btn-icon">⚙️</span>
+          <span class="btn-icon" aria-hidden="true">⚙️</span>
           <span>Request access</span>
         </a>
       </div>
 
-      <button class="hamburger" id="hamburger" aria-label="Toggle navigation">
+      <button class="hamburger" id="hamburger" aria-label="Toggle navigation" aria-expanded="false">
         <span></span><span></span><span></span>
       </button>
     </div>
   </header>
 
   <!-- HERO -->
-  <main class="container">
-    <section class="hero">
+  <main class="container" id="main">
+    <section class="hero" aria-labelledby="hero-title">
       <div class="hero-grid">
         <!-- Left -->
         <div>
@@ -859,7 +895,7 @@
             <span>Invite-only access</span>
           </div>
 
-          <h1 class="hero-title">
+          <h1 class="hero-title" id="hero-title">
             Claim jobs, launch scrcpy, and ship fixes — without touching the customer’s PC.
           </h1>
 
@@ -868,32 +904,32 @@
             and performance analytics tuned for Android software repair work.
           </p>
 
-          <div class="hero-kpis">
+          <div class="hero-kpis" aria-label="Key dashboard highlights">
             <div class="kpi-pill">
-              <span>⚡</span>
+              <span aria-hidden="true">⚡</span>
               <span><strong>1-click</strong> scrcpy launch</span>
             </div>
             <div class="kpi-pill">
-              <span>📊</span>
+              <span aria-hidden="true">📊</span>
               <span><strong>Per-tech metrics</strong> built-in</span>
             </div>
             <div class="kpi-pill">
-              <span>🛡️</span>
+              <span aria-hidden="true">🛡️</span>
               <span><strong>Whitelisted emails</strong> only</span>
             </div>
           </div>
 
-          <div class="feature-strip">
+          <div class="feature-strip" aria-label="Highlighted capabilities">
             <div class="feature-chip">
-              <span class="icon">🌐</span>
+              <span class="icon" aria-hidden="true">🌐</span>
               <span>Global remote jobs via ngrok-secured tunnels</span>
             </div>
             <div class="feature-chip">
-              <span class="icon">🎥</span>
+              <span class="icon" aria-hidden="true">🎥</span>
               <span>Optional session recording for QA</span>
             </div>
             <div class="feature-chip">
-              <span class="icon">📈</span>
+              <span class="icon" aria-hidden="true">📈</span>
               <span>Completion rate, AHT, earnings per hour</span>
             </div>
           </div>
@@ -905,55 +941,75 @@
         </div>
 
         <!-- Right: Login Card -->
-        <div class="auth-card-wrap">
+        <div class="auth-card-wrap" aria-label="Technician login panel">
           <div class="auth-card">
-            <div class="auth-glow"></div>
+            <div class="auth-glow" aria-hidden="true"></div>
             <div class="auth-inner">
               <div class="auth-badge-row">
                 <div class="auth-badge">
-                  <span class="icon">✅</span>
+                  <span class="icon" aria-hidden="true">✅</span>
                   <span>Production master v11.0</span>
                 </div>
                 <div class="auth-badge">
-                  <span class="icon">🧪</span>
+                  <span class="icon" aria-hidden="true">🧪</span>
                   <span>Beta tech program</span>
                 </div>
               </div>
 
-              <h2 class="auth-title">Technician login</h2>
+              <h2 class="auth-title" id="login-title">Technician login</h2>
               <p class="auth-subtitle">
                 Use your whitelisted email to access the live job queue and active sessions.
               </p>
 
-              <form onsubmit="event.preventDefault(); alert('Auth backend not wired yet – replace with real login.');">
+              <!-- TODO: Replace action with real backend endpoint (e.g. https://api.itechmobile.site/auth/technician/login) -->
+              <form 
+                aria-labelledby="login-title"
+                onsubmit="event.preventDefault(); alert('Auth backend not wired yet – replace with real login endpoint.');"
+              >
                 <div class="form-group">
-                  <label class="form-label">
+                  <label class="form-label" for="email">
                     <span>Work email</span>
                     <span class="hint">Whitelisted only</span>
                   </label>
-                  <input type="email" class="input" placeholder="you@repairshop.com" required>
+                  <input
+                    id="email"
+                    name="email"
+                    type="email"
+                    class="input"
+                    placeholder="you@repairshop.com"
+                    required
+                    autocomplete="email"
+                  >
                   <div class="helper-text">We use your email to link jobs, analytics, and access level.</div>
                 </div>
 
                 <div class="form-group">
-                  <label class="form-label">
+                  <label class="form-label" for="password">
                     <span>Password</span>
                     <span class="hint">Min. 12 characters</span>
                   </label>
-                  <input type="password" class="input" placeholder="••••••••••••" required>
+                  <input
+                    id="password"
+                    name="password"
+                    type="password"
+                    class="input"
+                    placeholder="••••••••••••"
+                    required
+                    autocomplete="current-password"
+                  >
                   <div class="helper-text">Use a unique password. Do not reuse your shop or personal credentials.</div>
                 </div>
 
                 <div class="form-footer">
                   <div>
-                    <input type="checkbox" id="remember" style="accent-color:#22c55e; margin-right:4px;">
+                    <input type="checkbox" id="remember" name="remember" style="accent-color:#22c55e; margin-right:4px;">
                     <label for="remember">Remember this device</label>
                   </div>
                   <a href="#access" class="link">Forgot access?</a>
                 </div>
 
                 <button type="submit" class="btn-login">
-                  <span class="icon">🔐</span>
+                  <span class="icon" aria-hidden="true">🔐</span>
                   <span>Sign in to dashboard</span>
                 </button>
               </form>
@@ -963,3 +1019,197 @@
               <p class="auth-footnote">
                 <strong>No account yet?</strong> This dashboard is invite-only. Scroll down to request technician access.
               </p>
+
+              <div class="status-strip" aria-label="Approximate live job volume">
+                <span>Live jobs in queue (rolling): <span class="count">8–15 / hour</span></span>
+                <span aria-hidden="true">🌍</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FEATURES -->
+    <section class="section" id="features" aria-labelledby="features-title">
+      <div class="section-header">
+        <div class="section-eyebrow">Dashboard features</div>
+        <h2 class="section-title section-title-gradient" id="features-title">
+          Built around the way real Android techs actually work
+        </h2>
+        <p class="section-subtitle">
+          From job intake to final confirmation, every step is designed so you spend less time fiddling with tools and more time fixing devices.
+        </p>
+      </div>
+
+      <div class="features-grid">
+        <article class="card">
+          <div class="card-inner">
+            <div class="card-icon" aria-hidden="true">📥</div>
+            <h3 class="card-title">Real-time job queue</h3>
+            <p class="card-body">
+              New jobs appear instantly from the customer USB client via Firebase. See device model, issue, AI confidence, and price before you claim.
+            </p>
+            <div class="pill-row" aria-label="Job queue extra details">
+              <span class="pill">AI triage & pre-pricing</span>
+              <span class="pill">Per-tech filters</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="card-inner">
+            <div class="card-icon" aria-hidden="true">🖥️</div>
+            <h3 class="card-title">One-click scrcpy launch</h3>
+            <p class="card-body">
+              When you claim a job, the tunnel + ADB target are already configured. Launch scrcpy with a single click in the dashboard.
+            </p>
+            <div class="pill-row">
+              <span class="pill">H.265 / high FPS</span>
+              <span class="pill">Multiple profiles</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="card-inner">
+            <div class="card-icon" aria-hidden="true">🎥</div>
+            <h3 class="card-title">Session recordings (optional)</h3>
+            <p class="card-body">
+              Keep recordings for quality audits, training, or dispute resolution. Toggle per-job based on sensitivity and customer consent.
+            </p>
+            <div class="pill-row">
+              <span class="pill">Encrypted at rest</span>
+              <span class="pill">Short retention windows</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="card-inner">
+            <div class="card-icon" aria-hidden="true">📊</div>
+            <h3 class="card-title">Performance analytics</h3>
+            <p class="card-body">
+              Track completion rate, average handle time, issue mix, and effective hourly earnings, so you can tune your availability and specialties.
+            </p>
+            <div class="pill-row">
+              <span class="pill">Per-tech dashboard</span>
+              <span class="pill">Exportable CSV</span>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- WORKFLOW / METRICS / ACCESS -->
+    <section class="section" id="workflow">
+      <div class="section-header">
+        <div class="section-eyebrow">Your day-to-day flow</div>
+        <h2 class="section-title section-title-gradient">From login to payout in a few clicks</h2>
+        <p class="section-subtitle">
+          The dashboard is designed so your workflow feels more like handling tickets in a helpdesk —
+          but wired directly into live Android devices.
+        </p>
+      </div>
+
+      <div class="features-grid" id="metrics">
+        <article class="card">
+          <div class="card-inner">
+            <div class="card-icon" aria-hidden="true">1️⃣</div>
+            <h3 class="card-title">Sign in & go available</h3>
+            <p class="card-body">
+              Log in with your technician account, flip your status to “Available,” and instantly start seeing jobs you’re eligible to claim.
+            </p>
+            <div class="card-footer">
+              Status presets: <strong>Available · Busy · Off shift</strong>
+            </div>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="card-inner">
+            <div class="card-icon" aria-hidden="true">2️⃣</div>
+            <h3 class="card-title">Claim, fix, close</h3>
+            <p class="card-body">
+              Claim a job, launch scrcpy, and work the device while the customer watches. When you’re done, mark the job as Resolved, Partial, or Failed.
+            </p>
+            <div class="card-footer">
+              Outcome tracking feeds back into AI pricing & routing.
+            </div>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="card-inner">
+            <div class="card-icon" aria-hidden="true">3️⃣</div>
+            <h3 class="card-title">Review your numbers</h3>
+            <p class="card-body">
+              See your repair mix (FRP, bootloop, MDM, etc.), your average times, and success rates. Use it to specialize, train, and negotiate better terms.
+            </p>
+            <div class="card-footer">
+              You keep your personal productivity data. We keep the platform stable.
+            </div>
+          </div>
+        </article>
+
+        <article class="card" id="access">
+          <div class="card-inner">
+            <div class="card-icon" aria-hidden="true">🔐</div>
+            <h3 class="card-title">Request technician access</h3>
+            <p class="card-body">
+              We currently onboard a small group of repair pros to validate flows, refine playbooks, and stress test the tech stack.
+            </p>
+            <div class="card-footer">
+              To request access, email:
+              <br>
+              <a href="mailto:itechinfomtl@gmail.com" class="link">itechinfomtl@gmail.com</a><br>
+              and include:
+              <ul style="margin:6px 0 0 16px; padding-left:0; color:#cbd5e1; font-size:11px;">
+                <li>Your name &amp; repair shop / brand</li>
+                <li>Years of Android repair experience</li>
+                <li>What types of software issues you handle most</li>
+                <li>Your preferred working hours &amp; timezone</li>
+              </ul>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+      <span>© 2025 iTECHMobile – Technician Dashboard • Built by iD01t Productions (Guillaume Lessard)</span>
+      <span>
+        Main site: <a href="https://itechmobile.site">itechmobile.site</a> ·
+        Privacy &amp; terms: <a href="https://itechmobile.site/docs/privacy.html">Privacy</a> / <a href="https://itechmobile.site/docs/terms.html">Terms</a>
+      </span>
+    </div>
+  </footer>
+
+  <script>
+    const hamburger = document.getElementById('hamburger');
+    const navLinks = document.getElementById('nav-links');
+
+    if (hamburger && navLinks) {
+      hamburger.addEventListener('click', () => {
+        const isOpen = hamburger.classList.toggle('open');
+        navLinks.classList.toggle('open');
+        hamburger.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+      });
+
+      navLinks.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', () => {
+          hamburger.classList.remove('open');
+          navLinks.classList.remove('open');
+          hamburger.setAttribute('aria-expanded', 'false');
+        });
+      });
+    }
+
+    console.log('%c iTECHMobile Technician Dashboard ', 'background: linear-gradient(135deg,#667eea,#22c55e); color: #020617; font-size: 16px; padding: 6px 10px; font-weight: 800; border-radius: 999px;');
+    console.log('%c Production Master v11.0 | Dashboard Frontend ', 'color:#4ade80; font-size:12px; font-weight:600;');
+    console.log('%c Built by iD01t Productions (Guillaume Lessard) ', 'color:#93c5fd; font-size:11px;');
+  </script>
+</body>
+</html>
