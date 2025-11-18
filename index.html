@@ -4,21 +4,962 @@
   <meta charset="UTF-8">
   <title>iTECHMobile Technician Dashboard</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="iTECHMobile Technician Dashboard – claim Android repair jobs, launch remote sessions, and manage your performance as a certified technician.">
+  <meta name="theme-color" content="#667eea">
+
+  <!-- Favicon -->
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+
+  <!-- Inter Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
   <style>
-    body { background:#0f172a; color:#f8fafc; font-family:system-ui,-apple-system,BlinkMacSystemFont,"Inter",sans-serif; display:flex; align-items:center; justify-content:center; min-height:100vh; padding:20px; }
-    .card { max-width:480px; background:#1e293b; border-radius:16px; padding:32px; box-shadow:0 20px 40px rgba(0,0,0,0.45); text-align:center; }
-    h1 { margin-bottom:10px; font-size:26px; }
-    p { margin-bottom:18px; color:#cbd5e1; }
-    a.btn { display:inline-block; padding:10px 18px; border-radius:12px; text-decoration:none; font-weight:700; background:linear-gradient(135deg,#667eea,#764ba2); color:#fff; }
-    small { display:block; margin-top:16px; font-size:12px; color:#94a3b8; }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --primary: #667eea;
+      --secondary: #764ba2;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --bg-dark: #020617;
+      --bg: #0f172a;
+      --bg-elevated: #1e293b;
+      --bg-soft: #020617;
+      --text: #f8fafc;
+      --text-secondary: #cbd5e1;
+      --border-subtle: rgba(148, 163, 184, 0.2);
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: radial-gradient(circle at top, #1d2450 0, #020617 45%, #020617 100%);
+      color: var(--text);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    .bg-animated {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      overflow: hidden;
+      pointer-events: none;
+    }
+
+    .orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(90px);
+      opacity: 0.5;
+      animation: float 20s infinite ease-in-out;
+    }
+
+    .orb1 {
+      width: 480px;
+      height: 480px;
+      background: radial-gradient(circle at 30% 30%, #667eea, #020617 70%);
+      top: -120px;
+      left: -120px;
+    }
+
+    .orb2 {
+      width: 460px;
+      height: 460px;
+      background: radial-gradient(circle at 50% 50%, #f97316, #020617 70%);
+      bottom: -160px;
+      right: -120px;
+      animation-delay: 5s;
+    }
+
+    .orb3 {
+      width: 380px;
+      height: 380px;
+      background: radial-gradient(circle at 50% 50%, #22c55e, #020617 70%);
+      bottom: 20%;
+      left: 20%;
+      opacity: 0.25;
+      animation-delay: 10s;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translate(0, 0); }
+      33% { transform: translate(24px, -14px); }
+      66% { transform: translate(-18px, 16px); }
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* NAVBAR */
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: radial-gradient(circle at top, rgba(15, 23, 42, 0.96), rgba(2, 6, 23, 0.96));
+      backdrop-filter: blur(22px);
+      border-bottom: 1px solid rgba(148, 163, 184, 0.25);
+    }
+
+    .nav-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .nav-left {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: var(--text);
+    }
+
+    .logo-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 14px;
+      background: conic-gradient(from 140deg, #667eea, #22c55e, #f97316, #667eea);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      font-size: 18px;
+      box-shadow: 0 0 0 1px rgba(15, 23, 42, 0.65), 0 14px 28px rgba(15, 23, 42, 0.8);
+    }
+
+    .logo-text-main {
+      font-weight: 800;
+      font-size: 18px;
+      letter-spacing: 0.02em;
+    }
+
+    .logo-text-sub {
+      font-size: 11px;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+      letter-spacing: 0.16em;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 20px;
+      align-items: center;
+      list-style: none;
+      font-size: 14px;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--text-secondary);
+      font-weight: 500;
+      padding: 6px 0;
+      border-bottom: 2px solid transparent;
+      transition: color 0.18s ease, border-color 0.18s ease;
+    }
+
+    .nav-links a:hover {
+      color: var(--text);
+      border-color: rgba(148, 163, 184, 0.6);
+    }
+
+    .badge-nav {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      border: 1px solid rgba(52, 211, 153, 0.4);
+      background: linear-gradient(to right, rgba(22, 163, 74, 0.16), rgba(6, 78, 59, 0.18));
+      color: #bbf7d0;
+    }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 9px 16px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      font-size: 13px;
+      font-weight: 600;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+    }
+
+    .btn-ghost {
+      background: rgba(15, 23, 42, 0.4);
+      color: var(--text-secondary);
+      border-color: rgba(148, 163, 184, 0.4);
+    }
+
+    .btn-ghost:hover {
+      color: var(--text);
+      border-color: rgba(148, 163, 184, 0.8);
+      background: rgba(15, 23, 42, 0.7);
+      transform: translateY(-1px);
+    }
+
+    .btn-primary {
+      background: radial-gradient(circle at 0 0, #22c55e, #4f46e5);
+      color: #e5e7eb;
+      border-color: rgba(79, 70, 229, 0.9);
+      box-shadow: 0 14px 34px rgba(59, 130, 246, 0.25);
+    }
+
+    .btn-primary:hover {
+      box-shadow: 0 18px 40px rgba(59, 130, 246, 0.4);
+      transform: translateY(-1px) scale(1.01);
+    }
+
+    .btn-icon {
+      font-size: 16px;
+    }
+
+    /* HAMBURGER */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 4px;
+      padding: 6px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      background: rgba(15, 23, 42, 0.9);
+      cursor: pointer;
+    }
+
+    .hamburger span {
+      width: 18px;
+      height: 2px;
+      border-radius: 999px;
+      background: #e5e7eb;
+      transition: all 0.25s ease;
+    }
+
+    /* MAIN GRID */
+    .hero {
+      padding: 40px 0 80px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+      gap: 50px;
+      align-items: center;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 18px;
+      padding: 5px 11px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      background: radial-gradient(circle at 0 0, rgba(56, 189, 248, 0.18), rgba(15, 23, 42, 0.8));
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: #e0f2fe;
+    }
+
+    .eyebrow span:last-child {
+      color: #7dd3fc;
+    }
+
+    .hero-title {
+      font-size: 42px;
+      line-height: 1.12;
+      font-weight: 900;
+      letter-spacing: -0.03em;
+      margin-bottom: 16px;
+      background: linear-gradient(135deg, #e5e7eb, #c7d2fe, #f97316);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero-subtitle {
+      font-size: 15px;
+      color: var(--text-secondary);
+      max-width: 520px;
+      margin-bottom: 22px;
+    }
+
+    .hero-kpis {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 18px;
+      margin: 18px 0 26px;
+    }
+
+    .kpi-pill {
+      padding: 7px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.45);
+      background: rgba(15, 23, 42, 0.85);
+      font-size: 11px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--text-secondary);
+    }
+
+    .kpi-pill strong {
+      color: #e5e7eb;
+      font-weight: 600;
+    }
+
+    .hero-note {
+      font-size: 11px;
+      color: #94a3b8;
+      max-width: 460px;
+    }
+
+    .hero-note strong {
+      color: #e5e7eb;
+      font-weight: 600;
+    }
+
+    /* AUTH CARD SIDE */
+    .auth-card-wrap {
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .auth-card {
+      width: 100%;
+      max-width: 380px;
+      background: radial-gradient(circle at top, rgba(30, 64, 175, 0.5), rgba(15, 23, 42, 0.98));
+      border-radius: 24px;
+      padding: 26px 24px 24px;
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      box-shadow:
+        0 24px 80px rgba(15, 23, 42, 0.85),
+        0 0 0 1px rgba(15, 23, 42, 0.9);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .auth-glow {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 10% 0, rgba(96, 165, 250, 0.32), transparent 52%),
+        radial-gradient(circle at 110% 120%, rgba(52, 211, 153, 0.26), transparent 56%);
+      mix-blend-mode: screen;
+      opacity: 0.9;
+      pointer-events: none;
+    }
+
+    .auth-inner {
+      position: relative;
+      z-index: 1;
+    }
+
+    .auth-badge-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 18px;
+    }
+
+    .auth-badge {
+      font-size: 11px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 9px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.45);
+      background: rgba(15, 23, 42, 0.82);
+      color: #cbd5e1;
+    }
+
+    .auth-badge span.icon {
+      font-size: 14px;
+    }
+
+    .auth-title {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .auth-subtitle {
+      font-size: 13px;
+      color: #cbd5e1;
+      margin-bottom: 18px;
+    }
+
+    .form-group {
+      margin-bottom: 14px;
+    }
+
+    .form-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      color: #cbd5e1;
+      margin-bottom: 4px;
+    }
+
+    .form-label span.hint {
+      color: #64748b;
+      font-size: 11px;
+    }
+
+    .input {
+      width: 100%;
+      padding: 9px 10px;
+      border-radius: 9px;
+      border: 1px solid rgba(148, 163, 184, 0.55);
+      background: rgba(15, 23, 42, 0.85);
+      color: var(--text);
+      font-size: 13px;
+      outline: none;
+      transition: border-color 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+    }
+
+    .input::placeholder {
+      color: #64748b;
+    }
+
+    .input:focus {
+      border-color: #4f46e5;
+      box-shadow: 0 0 0 1px rgba(79, 70, 229, 0.5);
+      background: rgba(15, 23, 42, 0.95);
+    }
+
+    .input-error {
+      border-color: rgba(248, 113, 113, 0.8);
+    }
+
+    .helper-text {
+      font-size: 11px;
+      color: #64748b;
+      margin-top: 2px;
+    }
+
+    .form-footer {
+      margin: 14px 0 6px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      font-size: 11px;
+      color: #94a3b8;
+    }
+
+    .link {
+      color: #93c5fd;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .link:hover {
+      text-decoration: underline;
+    }
+
+    .btn-login {
+      width: 100%;
+      margin-top: 6px;
+      background: linear-gradient(135deg, #4f46e5, #22c55e);
+      border-radius: 999px;
+      border: 1px solid rgba(79, 70, 229, 0.9);
+      color: #e5e7eb;
+      padding: 9px 0;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 16px 40px rgba(30, 64, 175, 0.75);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: transform 0.18s ease, box-shadow 0.18s ease;
+    }
+
+    .btn-login:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 20px 50px rgba(30, 64, 175, 0.9);
+    }
+
+    .btn-login span.icon {
+      font-size: 16px;
+    }
+
+    .auth-divider {
+      margin: 16px 0 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+      color: #64748b;
+    }
+
+    .auth-divider::before,
+    .auth-divider::after {
+      content: "";
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(to right, transparent, rgba(148, 163, 184, 0.5));
+    }
+
+    .auth-divider::after {
+      background: linear-gradient(to left, transparent, rgba(148, 163, 184, 0.5));
+    }
+
+    .auth-footnote {
+      font-size: 11px;
+      color: #94a3b8;
+      margin-top: 8px;
+    }
+
+    .auth-footnote strong {
+      color: #e5e7eb;
+    }
+
+    .status-strip {
+      margin-top: 16px;
+      padding: 7px 10px;
+      border-radius: 10px;
+      border: 1px solid rgba(52, 211, 153, 0.6);
+      background: rgba(22, 163, 74, 0.12);
+      font-size: 11px;
+      color: #bbf7d0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .status-strip span.count {
+      font-weight: 600;
+    }
+
+    /* FEATURES STRIP */
+    .feature-strip {
+      margin: 12px 0 34px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      font-size: 11px;
+      color: #94a3b8;
+    }
+
+    .feature-chip {
+      padding: 5px 9px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.3);
+      background: rgba(15, 23, 42, 0.75);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .feature-chip span.icon {
+      font-size: 13px;
+    }
+
+    /* SECTIONS BELOW HERO */
+    .section {
+      padding: 0 0 64px;
+    }
+
+    .section-header {
+      max-width: 760px;
+      margin: 0 auto 32px;
+      text-align: center;
+    }
+
+    .section-eyebrow {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: #94a3b8;
+      margin-bottom: 6px;
+    }
+
+    .section-title {
+      font-size: 24px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      margin-bottom: 6px;
+    }
+
+    .section-title-gradient {
+      background: linear-gradient(135deg, #e5e7eb, #a5b4fc);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .section-subtitle {
+      font-size: 14px;
+      color: var(--text-secondary);
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 18px;
+    }
+
+    .card {
+      background: linear-gradient(145deg, rgba(15, 23, 42, 0.96), rgba(15, 23, 42, 0.98));
+      border-radius: 18px;
+      padding: 18px 16px;
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      box-shadow: 0 18px 50px rgba(15, 23, 42, 0.85);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at top right, rgba(96, 165, 250, 0.25), transparent 52%);
+      opacity: 0.7;
+      pointer-events: none;
+    }
+
+    .card-inner {
+      position: relative;
+      z-index: 1;
+    }
+
+    .card-icon {
+      width: 30px;
+      height: 30px;
+      border-radius: 999px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      background: radial-gradient(circle at 0 0, rgba(59, 130, 246, 0.5), rgba(15, 23, 42, 0.9));
+      margin-bottom: 8px;
+    }
+
+    .card-title {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 3px;
+    }
+
+    .card-body {
+      font-size: 13px;
+      color: #cbd5e1;
+    }
+
+    .card-footer {
+      margin-top: 10px;
+      font-size: 11px;
+      color: #64748b;
+    }
+
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 6px;
+    }
+
+    .pill {
+      padding: 3px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.45);
+      font-size: 10px;
+      color: #cbd5e1;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 960px) {
+      .hero-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+      .auth-card-wrap {
+        justify-content: flex-start;
+      }
+      .hero {
+        padding-top: 26px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .nav-inner {
+        padding-inline: 16px;
+      }
+      .nav-links {
+        position: fixed;
+        top: 56px;
+        left: 12px;
+        right: 12px;
+        background: radial-gradient(circle at top, rgba(15, 23, 42, 0.98), rgba(15, 23, 42, 0.99));
+        flex-direction: column;
+        padding: 10px 12px 14px;
+        border-radius: 18px;
+        border: 1px solid rgba(148, 163, 184, 0.4);
+        box-shadow: 0 22px 60px rgba(15, 23, 42, 0.98);
+        transform-origin: top center;
+        transform: scaleY(0.9);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.18s ease, transform 0.18s ease;
+      }
+      .nav-links li {
+        width: 100%;
+      }
+      .nav-links a {
+        display: block;
+        width: 100%;
+        padding: 8px 2px;
+      }
+      .nav-links.open {
+        opacity: 1;
+        pointer-events: auto;
+        transform: scaleY(1);
+      }
+      .nav-right {
+        display: none;
+      }
+      .hamburger {
+        display: flex;
+      }
+      .hero-title {
+        font-size: 32px;
+      }
+    }
+
+    .hamburger.open span:nth-child(1) {
+      transform: translateY(3px) rotate(45deg);
+    }
+
+    .hamburger.open span:nth-child(2) {
+      opacity: 0;
+    }
+
+    .hamburger.open span:nth-child(3) {
+      transform: translateY(-3px) rotate(-45deg);
+    }
+
+    footer {
+      border-top: 1px solid rgba(148, 163, 184, 0.35);
+      padding: 16px 20px 26px;
+      margin-top: 14px;
+      background: radial-gradient(circle at top, rgba(15, 23, 42, 0.96), rgba(15, 23, 42, 0.98));
+    }
+
+    .footer-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      font-size: 11px;
+      color: #64748b;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .footer-inner a {
+      color: #93c5fd;
+      text-decoration: none;
+    }
+
+    .footer-inner a:hover {
+      text-decoration: underline;
+    }
   </style>
 </head>
 <body>
-  <div class="card">
-    <h1>Technician Dashboard</h1>
-    <p>This is the dedicated portal for certified iTECHMobile repair technicians.</p>
-    <a href="#" class="btn">Login (coming soon)</a>
-    <small>To request technician access, email <a href="mailto:itechinfomtl@gmail.com" style="color:#38bdf8;">itechinfomtl@gmail.com</a>.</small>
+  <!-- Background orbs -->
+  <div class="bg-animated">
+    <div class="orb orb1"></div>
+    <div class="orb orb2"></div>
+    <div class="orb orb3"></div>
   </div>
-</body>
-</html>
+
+  <!-- NAV -->
+  <header class="nav">
+    <div class="nav-inner">
+      <div class="nav-left">
+        <a href="https://itechmobile.site" class="logo">
+          <div class="logo-icon">iT</div>
+          <div>
+            <div class="logo-text-main">iTECHMobile</div>
+            <div class="logo-text-sub">Technician Dashboard</div>
+          </div>
+        </a>
+        <span class="badge-nav">
+          <span>●</span>
+          <span>Live job network</span>
+        </span>
+      </div>
+
+      <ul class="nav-links" id="nav-links">
+        <li><a href="#features">Features</a></li>
+        <li><a href="#workflow">Workflow</a></li>
+        <li><a href="#metrics">Metrics</a></li>
+        <li><a href="#access">Access</a></li>
+      </ul>
+
+      <div class="nav-right">
+        <a href="https://itechmobile.site" class="btn btn-ghost">Back to main site</a>
+        <a href="#access" class="btn btn-primary">
+          <span class="btn-icon">⚙️</span>
+          <span>Request access</span>
+        </a>
+      </div>
+
+      <button class="hamburger" id="hamburger" aria-label="Toggle navigation">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <main class="container">
+    <section class="hero">
+      <div class="hero-grid">
+        <!-- Left -->
+        <div>
+          <div class="eyebrow">
+            <span>For certified Android repair techs</span>
+            <span>Invite-only access</span>
+          </div>
+
+          <h1 class="hero-title">
+            Claim jobs, launch scrcpy, and ship fixes — without touching the customer’s PC.
+          </h1>
+
+          <p class="hero-subtitle">
+            The iTECHMobile Technician Dashboard gives you a real-time job queue, one-click scrcpy sessions over secure tunnels,
+            and performance analytics tuned for Android software repair work.
+          </p>
+
+          <div class="hero-kpis">
+            <div class="kpi-pill">
+              <span>⚡</span>
+              <span><strong>1-click</strong> scrcpy launch</span>
+            </div>
+            <div class="kpi-pill">
+              <span>📊</span>
+              <span><strong>Per-tech metrics</strong> built-in</span>
+            </div>
+            <div class="kpi-pill">
+              <span>🛡️</span>
+              <span><strong>Whitelisted emails</strong> only</span>
+            </div>
+          </div>
+
+          <div class="feature-strip">
+            <div class="feature-chip">
+              <span class="icon">🌐</span>
+              <span>Global remote jobs via ngrok-secured tunnels</span>
+            </div>
+            <div class="feature-chip">
+              <span class="icon">🎥</span>
+              <span>Optional session recording for QA</span>
+            </div>
+            <div class="feature-chip">
+              <span class="icon">📈</span>
+              <span>Completion rate, AHT, earnings per hour</span>
+            </div>
+          </div>
+
+          <p class="hero-note">
+            <strong>Note:</strong> This dashboard is for technicians only. Customers should start from the main site at
+            <a href="https://itechmobile.site" class="link">itechmobile.site</a> and run the USB client.
+          </p>
+        </div>
+
+        <!-- Right: Login Card -->
+        <div class="auth-card-wrap">
+          <div class="auth-card">
+            <div class="auth-glow"></div>
+            <div class="auth-inner">
+              <div class="auth-badge-row">
+                <div class="auth-badge">
+                  <span class="icon">✅</span>
+                  <span>Production master v11.0</span>
+                </div>
+                <div class="auth-badge">
+                  <span class="icon">🧪</span>
+                  <span>Beta tech program</span>
+                </div>
+              </div>
+
+              <h2 class="auth-title">Technician login</h2>
+              <p class="auth-subtitle">
+                Use your whitelisted email to access the live job queue and active sessions.
+              </p>
+
+              <form onsubmit="event.preventDefault(); alert('Auth backend not wired yet – replace with real login.');">
+                <div class="form-group">
+                  <label class="form-label">
+                    <span>Work email</span>
+                    <span class="hint">Whitelisted only</span>
+                  </label>
+                  <input type="email" class="input" placeholder="you@repairshop.com" required>
+                  <div class="helper-text">We use your email to link jobs, analytics, and access level.</div>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label">
+                    <span>Password</span>
+                    <span class="hint">Min. 12 characters</span>
+                  </label>
+                  <input type="password" class="input" placeholder="••••••••••••" required>
+                  <div class="helper-text">Use a unique password. Do not reuse your shop or personal credentials.</div>
+                </div>
+
+                <div class="form-footer">
+                  <div>
+                    <input type="checkbox" id="remember" style="accent-color:#22c55e; margin-right:4px;">
+                    <label for="remember">Remember this device</label>
+                  </div>
+                  <a href="#access" class="link">Forgot access?</a>
+                </div>
+
+                <button type="submit" class="btn-login">
+                  <span class="icon">🔐</span>
+                  <span>Sign in to dashboard</span>
+                </button>
+              </form>
+
+              <div class="auth-divider">or</div>
+
+              <p class="auth-footnote">
+                <strong>No account yet?</strong> This dashboard is invite-only. Scroll down to request technician access.
+              </p>
