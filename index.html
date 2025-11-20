@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
   <meta charset="UTF-8">
   <title>iTECHMobile Technician Dashboard</title>
@@ -15,7 +15,6 @@
   <meta property="og:title" content="iTECHMobile Technician Dashboard">
   <meta property="og:description" content="Invite-only dashboard for certified Android repair technicians. Claim jobs, launch scrcpy in one click, and track your completion rate and earnings.">
   <meta property="og:url" content="https://dashboard.itechmobile.site/">
-  <!-- Replace this with your actual preview image URL when you have one -->
   <meta property="og:image" content="https://itechmobile.site/assets/dashboard-preview.png">
 
   <!-- Twitter Card -->
@@ -24,1004 +23,332 @@
   <meta name="twitter:description" content="Remote Android repair jobs, one-click scrcpy, and performance analytics for certified technicians.">
   <meta name="twitter:image" content="https://itechmobile.site/assets/dashboard-preview.png">
 
-  <!-- Theme / Brand -->
+  <!-- Theme -->
   <meta name="theme-color" content="#667eea">
 
   <!-- Favicon -->
   <link rel="icon" href="/favicon.ico" type="image/x-icon">
 
-  <!-- Inter Font -->
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Tailwind Config -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#667eea',   // Indigo
+            secondary: '#764ba2', // Purple
+            accent: '#10b981',    // Emerald
+            background: '#020617' // Slate-950-like
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Google Font -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
+    /* Background grid + gradient */
+    .bg-grid {
+      background-image:
+        linear-gradient(to right, rgba(148, 163, 184, 0.08) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(148, 163, 184, 0.08) 1px, transparent 1px);
+      background-size: 36px 36px;
     }
 
-    :root {
-      --primary: #667eea;
-      --secondary: #764ba2;
-      --success: #10b981;
-      --warning: #f59e0b;
-      --danger: #ef4444;
-      --bg-dark: #020617;
-      --bg: #0f172a;
-      --bg-elevated: #1e293b;
-      --bg-soft: #020617;
-      --text: #f8fafc;
-      --text-secondary: #cbd5e1;
-      --border-subtle: rgba(148, 163, 184, 0.2);
-    }
-
-    body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-      background: radial-gradient(circle at top, #1d2450 0, #020617 45%, #020617 100%);
-      color: var(--text);
-      line-height: 1.6;
-      overflow-x: hidden;
-    }
-
-    .bg-animated {
-      position: fixed;
-      inset: 0;
-      z-index: 0;
-      overflow: hidden;
-      pointer-events: none;
-    }
-
-    .orb {
-      position: absolute;
-      border-radius: 50%;
-      filter: blur(90px);
-      opacity: 0.5;
-      animation: float 20s infinite ease-in-out;
-    }
-
-    .orb1 {
-      width: 480px;
-      height: 480px;
-      background: radial-gradient(circle at 30% 30%, #667eea, #020617 70%);
-      top: -120px;
-      left: -120px;
-    }
-
-    .orb2 {
-      width: 460px;
-      height: 460px;
-      background: radial-gradient(circle at 50% 50%, #f97316, #020617 70%);
-      bottom: -160px;
-      right: -120px;
-      animation-delay: 5s;
-    }
-
-    .orb3 {
-      width: 380px;
-      height: 380px;
-      background: radial-gradient(circle at 50% 50%, #22c55e, #020617 70%);
-      bottom: 20%;
-      left: 20%;
-      opacity: 0.25;
-      animation-delay: 10s;
-    }
-
-    @keyframes float {
-      0%, 100% { transform: translate(0, 0); }
-      33% { transform: translate(24px, -14px); }
-      66% { transform: translate(-18px, 16px); }
-    }
-
-    .container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 20px;
-      position: relative;
-      z-index: 1;
-    }
-
-    /* NAVBAR */
-    .nav {
-      position: sticky;
-      top: 0;
-      z-index: 20;
-      background: radial-gradient(circle at top, rgba(15, 23, 42, 0.96), rgba(2, 6, 23, 0.96));
-      backdrop-filter: blur(22px);
-      border-bottom: 1px solid rgba(148, 163, 184, 0.25);
-    }
-
-    .nav-inner {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 14px 20px;
+    /* Mobile nav */
+    .nav-links.open {
       display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-    }
-
-    .nav-left {
-      display: flex;
-      align-items: center;
-      gap: 18px;
-    }
-
-    .logo {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      text-decoration: none;
-      color: var(--text);
-    }
-
-    .logo-icon {
-      width: 36px;
-      height: 36px;
-      border-radius: 14px;
-      background: conic-gradient(from 140deg, #667eea, #22c55e, #f97316, #667eea);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 900;
-      font-size: 18px;
-      box-shadow: 0 0 0 1px rgba(15, 23, 42, 0.65), 0 14px 28px rgba(15, 23, 42, 0.8);
-    }
-
-    .logo-text-main {
-      font-weight: 800;
-      font-size: 18px;
-      letter-spacing: 0.02em;
-    }
-
-    .logo-text-sub {
-      font-size: 11px;
-      text-transform: uppercase;
-      color: var(--text-secondary);
-      letter-spacing: 0.16em;
-    }
-
-    .nav-links {
-      display: flex;
-      gap: 20px;
-      align-items: center;
-      list-style: none;
-      font-size: 14px;
-    }
-
-    .nav-links a {
-      text-decoration: none;
-      color: var(--text-secondary);
-      font-weight: 500;
-      padding: 6px 0;
-      border-bottom: 2px solid transparent;
-      transition: color 0.18s ease, border-color 0.18s ease;
-    }
-
-    .nav-links a:hover {
-      color: var(--text);
-      border-color: rgba(148, 163, 184, 0.6);
-    }
-
-    .badge-nav {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 4px 10px;
-      border-radius: 999px;
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-      border: 1px solid rgba(52, 211, 153, 0.4);
-      background: linear-gradient(to right, rgba(22, 163, 74, 0.16), rgba(6, 78, 59, 0.18));
-      color: #bbf7d0;
-    }
-
-    .nav-right {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      padding: 9px 16px;
-      border-radius: 999px;
-      border: 1px solid transparent;
-      font-size: 13px;
-      font-weight: 600;
-      text-decoration: none;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      white-space: nowrap;
-    }
-
-    .btn-ghost {
-      background: rgba(15, 23, 42, 0.4);
-      color: var(--text-secondary);
-      border-color: rgba(148, 163, 184, 0.4);
-    }
-
-    .btn-ghost:hover {
-      color: var(--text);
-      border-color: rgba(148, 163, 184, 0.8);
-      background: rgba(15, 23, 42, 0.7);
-      transform: translateY(-1px);
-    }
-
-    .btn-primary {
-      background: radial-gradient(circle at 0 0, #22c55e, #4f46e5);
-      color: #e5e7eb;
-      border-color: rgba(79, 70, 229, 0.9);
-      box-shadow: 0 14px 34px rgba(59, 130, 246, 0.25);
-    }
-
-    .btn-primary:hover {
-      box-shadow: 0 18px 40px rgba(59, 130, 246, 0.4);
-      transform: translateY(-1px) scale(1.01);
-    }
-
-    .btn-icon {
-      font-size: 16px;
-    }
-
-    /* HAMBURGER */
-    .hamburger {
-      display: none;
       flex-direction: column;
-      gap: 4px;
-      padding: 6px;
-      border-radius: 999px;
-      border: 1px solid rgba(148, 163, 184, 0.5);
-      background: rgba(15, 23, 42, 0.9);
-      cursor: pointer;
-    }
-
-    .hamburger span {
-      width: 18px;
-      height: 2px;
-      border-radius: 999px;
-      background: #e5e7eb;
-      transition: all 0.25s ease;
-    }
-
-    .hamburger.open span:nth-child(1) {
-      transform: translateY(3px) rotate(45deg);
-    }
-
-    .hamburger.open span:nth-child(2) {
-      opacity: 0;
-    }
-
-    .hamburger.open span:nth-child(3) {
-      transform: translateY(-3px) rotate(-45deg);
-    }
-
-    /* HERO */
-    .hero {
-      padding: 40px 0 80px;
-    }
-
-    .hero-grid {
-      display: grid;
-      grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
-      gap: 50px;
-      align-items: center;
-    }
-
-    .eyebrow {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 18px;
-      padding: 5px 11px;
-      border-radius: 999px;
-      border: 1px solid rgba(148, 163, 184, 0.5);
-      background: radial-gradient(circle at 0 0, rgba(56, 189, 248, 0.18), rgba(15, 23, 42, 0.8));
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 0.16em;
-      color: #e0f2fe;
-    }
-
-    .eyebrow span:last-child {
-      color: #7dd3fc;
-    }
-
-    .hero-title {
-      font-size: 42px;
-      line-height: 1.12;
-      font-weight: 900;
-      letter-spacing: -0.03em;
-      margin-bottom: 16px;
-      background: linear-gradient(135deg, #e5e7eb, #c7d2fe, #f97316);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    .hero-subtitle {
-      font-size: 15px;
-      color: var(--text-secondary);
-      max-width: 520px;
-      margin-bottom: 22px;
-    }
-
-    .hero-kpis {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 18px;
-      margin: 18px 0 26px;
-    }
-
-    .kpi-pill {
-      padding: 7px 12px;
-      border-radius: 999px;
-      border: 1px solid rgba(148, 163, 184, 0.45);
-      background: rgba(15, 23, 42, 0.85);
-      font-size: 11px;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      color: var(--text-secondary);
-    }
-
-    .kpi-pill strong {
-      color: #e5e7eb;
-      font-weight: 600;
-    }
-
-    .hero-note {
-      font-size: 11px;
-      color: #94a3b8;
-      max-width: 460px;
-    }
-
-    .hero-note strong {
-      color: #e5e7eb;
-      font-weight: 600;
-    }
-
-    .feature-strip {
-      margin: 12px 0 34px;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      font-size: 11px;
-      color: #94a3b8;
-    }
-
-    .feature-chip {
-      padding: 5px 9px;
-      border-radius: 999px;
-      border: 1px solid rgba(148, 163, 184, 0.3);
-      background: rgba(15, 23, 42, 0.75);
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .feature-chip span.icon {
-      font-size: 13px;
-    }
-
-    /* AUTH CARD SIDE */
-    .auth-card-wrap {
-      display: flex;
-      justify-content: flex-end;
-    }
-
-    .auth-card {
-      width: 100%;
-      max-width: 380px;
-      background: radial-gradient(circle at top, rgba(30, 64, 175, 0.5), rgba(15, 23, 42, 0.98));
-      border-radius: 24px;
-      padding: 26px 24px 24px;
-      border: 1px solid rgba(148, 163, 184, 0.4);
-      box-shadow:
-        0 24px 80px rgba(15, 23, 42, 0.85),
-        0 0 0 1px rgba(15, 23, 42, 0.9);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .auth-glow {
       position: absolute;
-      inset: 0;
-      background:
-        radial-gradient(circle at 10% 0, rgba(96, 165, 250, 0.32), transparent 52%),
-        radial-gradient(circle at 110% 120%, rgba(52, 211, 153, 0.26), transparent 56%);
-      mix-blend-mode: screen;
-      opacity: 0.9;
-      pointer-events: none;
-    }
-
-    .auth-inner {
-      position: relative;
-      z-index: 1;
-    }
-
-    .auth-badge-row {
-      display: flex;
-      justify-content: space-between;
-      gap: 8px;
-      margin-bottom: 18px;
-    }
-
-    .auth-badge {
-      font-size: 11px;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 4px 9px;
-      border-radius: 999px;
-      border: 1px solid rgba(148, 163, 184, 0.45);
-      background: rgba(15, 23, 42, 0.82);
-      color: #cbd5e1;
-    }
-
-    .auth-badge span.icon {
-      font-size: 14px;
-    }
-
-    .auth-title {
-      font-size: 18px;
-      font-weight: 700;
-      margin-bottom: 4px;
-    }
-
-    .auth-subtitle {
-      font-size: 13px;
-      color: #cbd5e1;
-      margin-bottom: 18px;
-    }
-
-    .form-group {
-      margin-bottom: 14px;
-    }
-
-    .form-label {
-      display: flex;
-      justify-content: space-between;
-      font-size: 12px;
-      color: #cbd5e1;
-      margin-bottom: 4px;
-    }
-
-    .form-label span.hint {
-      color: #64748b;
-      font-size: 11px;
-    }
-
-    .input {
+      top: 64px;
+      left: 0;
       width: 100%;
-      padding: 9px 10px;
-      border-radius: 9px;
-      border: 1px solid rgba(148, 163, 184, 0.55);
-      background: rgba(15, 23, 42, 0.85);
-      color: var(--text);
-      font-size: 13px;
-      outline: none;
-      transition: border-color 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+      background-color: #020617;
+      padding: 0.75rem 0 1rem 0;
+      border-bottom-left-radius: 1rem;
+      border-bottom-right-radius: 1rem;
+      box-shadow: 0 16px 40px rgba(15, 23, 42, 0.9);
+      z-index: 40;
     }
 
-    .input::placeholder {
-      color: #64748b;
-    }
-
-    .input:focus {
-      border-color: #4f46e5;
-      box-shadow: 0 0 0 1px rgba(79, 70, 229, 0.5);
-      background: rgba(15, 23, 42, 0.95);
-    }
-
-    .helper-text {
-      font-size: 11px;
-      color: #64748b;
-      margin-top: 2px;
-    }
-
-    .form-footer {
-      margin: 14px 0 6px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-      font-size: 11px;
-      color: #94a3b8;
-    }
-
-    .link {
-      color: #93c5fd;
-      text-decoration: none;
-      font-weight: 500;
-    }
-
-    .link:hover {
-      text-decoration: underline;
-    }
-
-    .btn-login {
+    .nav-links.open a {
       width: 100%;
-      margin-top: 6px;
-      background: linear-gradient(135deg, #4f46e5, #22c55e);
-      border-radius: 999px;
-      border: 1px solid rgba(79, 70, 229, 0.9);
-      color: #e5e7eb;
-      padding: 9px 0;
-      font-size: 13px;
-      font-weight: 600;
-      cursor: pointer;
-      box-shadow: 0 16px 40px rgba(30, 64, 175, 0.75);
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      transition: transform 0.18s ease, box-shadow 0.18s ease;
-    }
-
-    .btn-login:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 20px 50px rgba(30, 64, 175, 0.9);
-    }
-
-    .btn-login span.icon {
-      font-size: 16px;
-    }
-
-    .auth-divider {
-      margin: 16px 0 12px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 11px;
-      color: #64748b;
-    }
-
-    .auth-divider::before,
-    .auth-divider::after {
-      content: "";
-      flex: 1;
-      height: 1px;
-      background: linear-gradient(to right, transparent, rgba(148, 163, 184, 0.5));
-    }
-
-    .auth-divider::after {
-      background: linear-gradient(to left, transparent, rgba(148, 163, 184, 0.5));
-    }
-
-    .auth-footnote {
-      font-size: 11px;
-      color: #94a3b8;
-      margin-top: 8px;
-    }
-
-    .auth-footnote strong {
-      color: #e5e7eb;
-    }
-
-    .status-strip {
-      margin-top: 16px;
-      padding: 7px 10px;
-      border-radius: 10px;
-      border: 1px solid rgba(52, 211, 153, 0.6);
-      background: rgba(22, 163, 74, 0.12);
-      font-size: 11px;
-      color: #bbf7d0;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 8px;
-    }
-
-    .status-strip span.count {
-      font-weight: 600;
-    }
-
-    /* SECTION BASE */
-    .section {
-      padding: 0 0 64px;
-    }
-
-    .section-header {
-      max-width: 760px;
-      margin: 0 auto 32px;
       text-align: center;
+      padding: 0.75rem 1rem;
     }
 
-    .section-eyebrow {
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 0.16em;
-      color: #94a3b8;
-      margin-bottom: 6px;
+    /* FAQ-style arrow rotation (if used later) */
+    .rotate-180 {
+      transform: rotate(180deg);
     }
 
-    .section-title {
-      font-size: 24px;
-      font-weight: 800;
-      letter-spacing: -0.03em;
-      margin-bottom: 6px;
-    }
-
-    .section-title-gradient {
-      background: linear-gradient(135deg, #e5e7eb, #a5b4fc);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    .section-subtitle {
-      font-size: 14px;
-      color: var(--text-secondary);
-    }
-
-    .features-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
-      gap: 18px;
-    }
-
-    .card {
-      background: linear-gradient(145deg, rgba(15, 23, 42, 0.96), rgba(15, 23, 42, 0.98));
-      border-radius: 18px;
-      padding: 18px 16px;
-      border: 1px solid rgba(148, 163, 184, 0.4);
-      box-shadow: 0 18px 50px rgba(15, 23, 42, 0.85);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .card::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(circle at top right, rgba(96, 165, 250, 0.25), transparent 52%);
-      opacity: 0.7;
-      pointer-events: none;
-    }
-
-    .card-inner {
-      position: relative;
-      z-index: 1;
-    }
-
-    .card-icon {
-      width: 30px;
-      height: 30px;
-      border-radius: 999px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 16px;
-      background: radial-gradient(circle at 0 0, rgba(59, 130, 246, 0.5), rgba(15, 23, 42, 0.9));
-      margin-bottom: 8px;
-    }
-
-    .card-title {
-      font-size: 14px;
-      font-weight: 600;
-      margin-bottom: 3px;
-    }
-
-    .card-body {
-      font-size: 13px;
-      color: #cbd5e1;
-    }
-
-    .card-footer {
-      margin-top: 10px;
-      font-size: 11px;
-      color: #64748b;
-    }
-
-    .pill-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      margin-top: 6px;
-    }
-
-    .pill {
-      padding: 3px 8px;
-      border-radius: 999px;
-      border: 1px solid rgba(148, 163, 184, 0.45);
-      font-size: 10px;
-      color: #cbd5e1;
-    }
-
-    /* RESPONSIVE */
-    @media (max-width: 960px) {
-      .hero-grid {
-        grid-template-columns: minmax(0, 1fr);
-      }
-      .auth-card-wrap {
-        justify-content: flex-start;
-      }
-      .hero {
-        padding-top: 26px;
-      }
-    }
-
-    @media (max-width: 768px) {
-      .nav-inner {
-        padding-inline: 16px;
-      }
-      .nav-links {
-        position: fixed;
-        top: 56px;
-        left: 12px;
-        right: 12px;
-        background: radial-gradient(circle at top, rgba(15, 23, 42, 0.98), rgba(15, 23, 42, 0.99));
-        flex-direction: column;
-        padding: 10px 12px 14px;
-        border-radius: 18px;
-        border: 1px solid rgba(148, 163, 184, 0.4);
-        box-shadow: 0 22px 60px rgba(15, 23, 42, 0.98);
-        transform-origin: top center;
-        transform: scaleY(0.9);
-        opacity: 0;
-        pointer-events: none;
-        transition: opacity 0.18s ease, transform 0.18s ease;
-      }
-      .nav-links li {
-        width: 100%;
-      }
-      .nav-links a {
-        display: block;
-        width: 100%;
-        padding: 8px 2px;
-      }
-      .nav-links.open {
-        opacity: 1;
-        pointer-events: auto;
-        transform: scaleY(1);
-      }
-      .nav-right {
-        display: none;
-      }
-      .hamburger {
-        display: flex;
-      }
-      .hero-title {
-        font-size: 32px;
-      }
-    }
-
-    footer {
-      border-top: 1px solid rgba(148, 163, 184, 0.35);
-      padding: 16px 20px 26px;
-      margin-top: 14px;
-      background: radial-gradient(circle at top, rgba(15, 23, 42, 0.96), rgba(15, 23, 42, 0.98));
-    }
-
-    .footer-inner {
-      max-width: 1200px;
-      margin: 0 auto;
-      font-size: 11px;
-      color: #64748b;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      gap: 8px;
-      align-items: center;
-    }
-
-    .footer-inner a {
-      color: #93c5fd;
-      text-decoration: none;
-    }
-
-    .footer-inner a:hover {
-      text-decoration: underline;
-    }
-
-    /* Skip link for accessibility */
+    /* Skip link */
     .skip-link {
       position: absolute;
       top: -40px;
-      left: 12px;
-      padding: 8px 12px;
-      background: #111827;
+      left: 1rem;
+      padding: 0.5rem 0.75rem;
+      background: #020617;
       color: #f9fafb;
       border-radius: 999px;
-      font-size: 12px;
+      font-size: 0.75rem;
       text-decoration: none;
       z-index: 50;
-      transition: top 0.2s;
+      transition: top 0.2s ease;
     }
-
     .skip-link:focus {
-      top: 12px;
+      top: 0.75rem;
     }
   </style>
 </head>
-<body>
+
+<body class="bg-background text-slate-100 font-sans antialiased">
+
   <a href="#main" class="skip-link">Skip to main content</a>
 
-  <!-- Background orbs -->
-  <div class="bg-animated" aria-hidden="true">
-    <div class="orb orb1"></div>
-    <div class="orb orb2"></div>
-    <div class="orb orb3"></div>
+  <!-- Subtle background orbs -->
+  <div class="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
+    <div class="absolute -top-40 -left-40 h-96 w-96 rounded-full bg-primary/20 blur-3xl"></div>
+    <div class="absolute -bottom-40 -right-40 h-[26rem] w-[26rem] rounded-full bg-secondary/30 blur-3xl"></div>
+    <div class="absolute bottom-10 left-1/2 h-64 w-64 -translate-x-1/2 rounded-full bg-accent/10 blur-3xl"></div>
   </div>
 
-  <!-- NAV -->
-  <header class="nav">
-    <div class="nav-inner">
-      <div class="nav-left">
-        <a href="https://itechmobile.site" class="logo">
-          <div class="logo-icon" aria-hidden="true">iT</div>
-          <div>
-            <div class="logo-text-main">iTECHMobile</div>
-            <div class="logo-text-sub">Technician Dashboard</div>
+  <!-- Header / Navigation -->
+  <header class="sticky top-0 z-40 border-b border-slate-800 bg-background/90 backdrop-blur-lg">
+    <div class="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
+      <!-- Logo -->
+      <a href="https://itechmobile.site" class="flex items-center space-x-2">
+        <div class="flex h-9 w-9 items-center justify-center rounded-2xl bg-gradient-to-tr from-primary via-accent to-secondary text-xs font-extrabold text-slate-950 shadow-lg shadow-primary/40">
+          iT
+        </div>
+        <div class="leading-tight">
+          <div class="text-sm font-extrabold tracking-tight text-slate-50">iTECHMobile</div>
+          <div class="text-[10px] font-medium uppercase tracking-[0.18em] text-slate-400">
+            Technician Dashboard
           </div>
+        </div>
+      </a>
+
+      <!-- Desktop nav -->
+      <nav id="nav-links" class="nav-links hidden items-center space-x-6 text-sm font-medium text-slate-300 md:flex">
+        <a href="#features" class="hover:text-white">Features</a>
+        <a href="#workflow" class="hover:text-white">Workflow</a>
+        <a href="#metrics" class="hover:text-white">Analytics</a>
+        <a href="#access" class="hover:text-white">Access</a>
+        <a href="https://itechmobile.site" class="hidden text-xs font-semibold text-slate-300 hover:text-white lg:inline-flex">
+          Back to main site
         </a>
-        <span class="badge-nav" aria-label="Live job network status">
-          <span aria-hidden="true">●</span>
-          <span>Live job network</span>
-        </span>
-      </div>
-
-      <ul class="nav-links" id="nav-links">
-        <li><a href="#features">Features</a></li>
-        <li><a href="#workflow">Workflow</a></li>
-        <li><a href="#metrics">Metrics</a></li>
-        <li><a href="#access">Access</a></li>
-      </ul>
-
-      <div class="nav-right">
-        <a href="https://itechmobile.site" class="btn btn-ghost">Back to main site</a>
-        <a href="#access" class="btn btn-primary">
-          <span class="btn-icon" aria-hidden="true">⚙️</span>
-          <span>Request access</span>
+        <a href="#access" class="hidden rounded-full bg-accent px-4 py-2 text-xs font-semibold text-slate-950 shadow-md shadow-emerald-500/40 hover:bg-emerald-400 md:inline-flex">
+          Request Access
         </a>
-      </div>
+      </nav>
 
-      <button class="hamburger" id="hamburger" aria-label="Toggle navigation" aria-expanded="false">
-        <span></span><span></span><span></span>
-      </button>
+      <!-- Mobile: CTA + hamburger -->
+      <div class="flex items-center space-x-3 md:hidden">
+        <a href="#access" class="inline-flex items-center rounded-full bg-accent px-3 py-1.5 text-xs font-semibold text-slate-950 shadow-md shadow-emerald-500/40">
+          Access
+        </a>
+        <button
+          id="hamburger"
+          class="inline-flex h-9 w-9 items-center justify-center rounded-full border border-slate-700 bg-slate-900 text-slate-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+          aria-label="Toggle navigation"
+          aria-expanded="false"
+          aria-controls="nav-links"
+        >
+          <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M4 6h16M4 12h16m-7 6h7"/>
+          </svg>
+        </button>
+      </div>
     </div>
   </header>
 
-  <!-- HERO -->
-  <main class="container" id="main">
-    <section class="hero" aria-labelledby="hero-title">
-      <div class="hero-grid">
-        <!-- Left -->
-        <div>
-          <div class="eyebrow">
-            <span>For certified Android repair techs</span>
-            <span>Invite-only access</span>
+  <main id="main">
+    <!-- Hero -->
+    <section class="bg-grid">
+      <div class="mx-auto flex max-w-6xl flex-col gap-12 px-4 pb-20 pt-12 sm:px-6 lg:flex-row lg:items-center lg:pt-16">
+        <!-- Left: Copy -->
+        <div class="max-w-xl">
+          <div class="inline-flex items-center rounded-full border border-emerald-400/40 bg-emerald-500/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-emerald-200">
+            <span class="mr-1.5 inline-flex h-1.5 w-1.5 rounded-full bg-emerald-400"></span>
+            For certified Android repair techs · Invite only
           </div>
 
-          <h1 class="hero-title" id="hero-title">
-            Claim jobs, launch scrcpy, and ship fixes — without touching the customer’s PC.
+          <h1 class="mt-4 text-3xl font-extrabold tracking-tight text-slate-50 sm:text-4xl lg:text-[2.6rem] lg:leading-tight">
+            Claim remote jobs, launch
+            <span class="bg-gradient-to-r from-primary via-accent to-secondary bg-clip-text text-transparent">
+              scrcpy
+            </span>
+            in one click, and ship fixes while customers watch.
           </h1>
 
-          <p class="hero-subtitle">
-            The iTECHMobile Technician Dashboard gives you a real-time job queue, one-click scrcpy sessions over secure tunnels,
-            and performance analytics tuned for Android software repair work.
+          <p class="mt-4 text-sm text-slate-300 sm:text-base">
+            The iTECHMobile Technician Dashboard connects you to pre-diagnosed, pre-paid Android repair jobs.
+            One-click scrcpy over secure tunnels, per-tech analytics, and a workflow built for high-volume software repairs.
           </p>
 
-          <div class="hero-kpis" aria-label="Key dashboard highlights">
-            <div class="kpi-pill">
-              <span aria-hidden="true">⚡</span>
-              <span><strong>1-click</strong> scrcpy launch</span>
+          <!-- KPI strip -->
+          <dl class="mt-6 grid max-w-md grid-cols-2 gap-3 text-xs text-slate-300 sm:text-[13px]">
+            <div class="flex items-center space-x-2 rounded-full border border-slate-700 bg-slate-900/70 px-3 py-2">
+              <span class="text-base" aria-hidden="true">⚡</span>
+              <div>
+                <dt class="font-semibold text-slate-100">1-click scrcpy</dt>
+                <dd class="text-slate-400">Tunnel & ADB pre-configured per job</dd>
+              </div>
             </div>
-            <div class="kpi-pill">
-              <span aria-hidden="true">📊</span>
-              <span><strong>Per-tech metrics</strong> built-in</span>
+            <div class="flex items-center space-x-2 rounded-full border border-slate-700 bg-slate-900/70 px-3 py-2">
+              <span class="text-base" aria-hidden="true">📊</span>
+              <div>
+                <dt class="font-semibold text-slate-100">Per-tech metrics</dt>
+                <dd class="text-slate-400">Completion, AHT, earnings per hour</dd>
+              </div>
             </div>
-            <div class="kpi-pill">
-              <span aria-hidden="true">🛡️</span>
-              <span><strong>Whitelisted emails</strong> only</span>
+            <div class="flex items-center space-x-2 rounded-full border border-slate-700 bg-slate-900/70 px-3 py-2">
+              <span class="text-base" aria-hidden="true">🛡️</span>
+              <div>
+                <dt class="font-semibold text-slate-100">Whitelisted only</dt>
+                <dd class="text-slate-400">Invite-based access via work email</dd>
+              </div>
             </div>
+            <div class="flex items-center space-x-2 rounded-full border border-slate-700 bg-slate-900/70 px-3 py-2">
+              <span class="text-base" aria-hidden="true">🌍</span>
+              <div>
+                <dt class="font-semibold text-slate-100">Global job feed</dt>
+                <dd class="text-slate-400">8–15 live jobs / hr (rolling)</dd>
+              </div>
+            </div>
+          </dl>
+
+          <!-- Hero actions -->
+          <div class="mt-7 flex flex-col space-y-3 text-sm sm:flex-row sm:items-center sm:space-y-0 sm:space-x-4">
+            <a href="#access" class="inline-flex items-center justify-center rounded-full bg-accent px-5 py-2.5 text-sm font-semibold text-slate-950 shadow-lg shadow-emerald-500/40 hover:bg-emerald-400">
+              Request technician access
+              <svg class="ml-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+              </svg>
+            </a>
+            <a href="https://itechmobile.site" class="inline-flex items-center justify-center rounded-full border border-slate-600 bg-slate-900/60 px-4 py-2 text-xs font-medium text-slate-300 hover:bg-slate-800">
+              Back to customer site
+            </a>
           </div>
 
-          <div class="feature-strip" aria-label="Highlighted capabilities">
-            <div class="feature-chip">
-              <span class="icon" aria-hidden="true">🌐</span>
-              <span>Global remote jobs via ngrok-secured tunnels</span>
-            </div>
-            <div class="feature-chip">
-              <span class="icon" aria-hidden="true">🎥</span>
-              <span>Optional session recording for QA</span>
-            </div>
-            <div class="feature-chip">
-              <span class="icon" aria-hidden="true">📈</span>
-              <span>Completion rate, AHT, earnings per hour</span>
-            </div>
-          </div>
-
-          <p class="hero-note">
-            <strong>Note:</strong> This dashboard is for technicians only. Customers should start from the main site at
-            <a href="https://itechmobile.site" class="link">itechmobile.site</a> and run the USB client.
+          <p class="mt-4 max-w-md text-[11px] text-slate-400">
+            <span class="font-semibold text-slate-200">Note:</span> This dashboard is for technicians only.
+            Customers should start from <a href="https://itechmobile.site" class="text-indigo-300 hover:text-indigo-200 underline underline-offset-2">itechmobile.site</a>
+            and run the USB client for remote repair.
           </p>
         </div>
 
-        <!-- Right: Login Card -->
-        <div class="auth-card-wrap" aria-label="Technician login panel">
-          <div class="auth-card">
-            <div class="auth-glow" aria-hidden="true"></div>
-            <div class="auth-inner">
-              <div class="auth-badge-row">
-                <div class="auth-badge">
-                  <span class="icon" aria-hidden="true">✅</span>
-                  <span>Production master v11.0</span>
-                </div>
-                <div class="auth-badge">
-                  <span class="icon" aria-hidden="true">🧪</span>
-                  <span>Beta tech program</span>
-                </div>
+        <!-- Right: Login card (static mock) -->
+        <div class="w-full max-w-md lg:ml-auto">
+          <div class="relative overflow-hidden rounded-3xl border border-slate-700/70 bg-slate-950/80 px-5 py-5 shadow-2xl shadow-indigo-900/60">
+            <div class="pointer-events-none absolute inset-0 bg-gradient-to-br from-primary/20 via-transparent to-accent/20 opacity-80"></div>
+
+            <div class="relative">
+              <div class="mb-3 flex items-center justify-between text-[11px]">
+                <span class="inline-flex items-center space-x-1 rounded-full border border-slate-600/80 bg-slate-900/80 px-2 py-1 text-slate-200">
+                  <span class="text-[13px]" aria-hidden="true">✅</span>
+                  <span>Production Master v14.0</span>
+                </span>
+                <span class="inline-flex items-center space-x-1 rounded-full border border-amber-400/60 bg-amber-500/15 px-2 py-1 text-amber-100">
+                  <span class="text-[13px]" aria-hidden="true">🧪</span>
+                  <span>Beta tech cohort</span>
+                </span>
               </div>
 
-              <h2 class="auth-title" id="login-title">Technician login</h2>
-              <p class="auth-subtitle">
-                Use your whitelisted email to access the live job queue and active sessions.
+              <h2 class="text-lg font-semibold text-slate-50">Technician login</h2>
+              <p class="mt-1 text-xs text-slate-300">
+                Use your whitelisted work email to access the live job queue and active sessions.
               </p>
 
-              <!-- TODO: Replace action with real backend endpoint (e.g. https://api.itechmobile.site/auth/technician/login) -->
-              <form 
-                aria-labelledby="login-title"
-                onsubmit="event.preventDefault(); alert('Auth backend not wired yet – replace with real login endpoint.');"
+              <form
+                class="mt-4 space-y-3"
+                aria-label="Technician login form (demo)"
+                onsubmit="event.preventDefault(); alert('Demo only – wire this form to your auth backend.');"
               >
-                <div class="form-group">
-                  <label class="form-label" for="email">
-                    <span>Work email</span>
-                    <span class="hint">Whitelisted only</span>
-                  </label>
+                <div>
+                  <div class="mb-1 flex items-center justify-between text-[11px] text-slate-300">
+                    <label for="email" class="font-medium">Work email</label>
+                    <span class="text-slate-500">Whitelisted only</span>
+                  </div>
                   <input
                     id="email"
                     name="email"
                     type="email"
-                    class="input"
-                    placeholder="you@repairshop.com"
                     required
                     autocomplete="email"
-                  >
-                  <div class="helper-text">We use your email to link jobs, analytics, and access level.</div>
+                    placeholder="you@repairshop.com"
+                    class="w-full rounded-xl border border-slate-600/80 bg-slate-900/80 px-3 py-2 text-xs text-slate-100 placeholder-slate-500 outline-none focus:border-primary focus:ring-1 focus:ring-primary"
+                  />
+                  <p class="mt-1 text-[11px] text-slate-500">
+                    Used to link jobs, analytics, and access level.
+                  </p>
                 </div>
 
-                <div class="form-group">
-                  <label class="form-label" for="password">
-                    <span>Password</span>
-                    <span class="hint">Min. 12 characters</span>
-                  </label>
+                <div>
+                  <div class="mb-1 flex items-center justify-between text-[11px] text-slate-300">
+                    <label for="password" class="font-medium">Password</label>
+                    <span class="text-slate-500">Min. 12 characters</span>
+                  </div>
                   <input
                     id="password"
                     name="password"
                     type="password"
-                    class="input"
-                    placeholder="••••••••••••"
                     required
                     autocomplete="current-password"
-                  >
-                  <div class="helper-text">Use a unique password. Do not reuse your shop or personal credentials.</div>
+                    placeholder="••••••••••••"
+                    class="w-full rounded-xl border border-slate-600/80 bg-slate-900/80 px-3 py-2 text-xs text-slate-100 placeholder-slate-500 outline-none focus:border-primary focus:ring-1 focus:ring-primary"
+                  />
+                  <p class="mt-1 text-[11px] text-slate-500">
+                    Use a unique password. Do not reuse shop or personal credentials.
+                  </p>
                 </div>
 
-                <div class="form-footer">
-                  <div>
-                    <input type="checkbox" id="remember" name="remember" style="accent-color:#22c55e; margin-right:4px;">
-                    <label for="remember">Remember this device</label>
-                  </div>
-                  <a href="#access" class="link">Forgot access?</a>
+                <div class="flex items-center justify-between text-[11px] text-slate-300">
+                  <label class="inline-flex items-center space-x-1">
+                    <input
+                      id="remember"
+                      name="remember"
+                      type="checkbox"
+                      class="h-3 w-3 rounded border-slate-600 bg-slate-900 text-accent focus:ring-0"
+                    />
+                    <span>Remember this device</span>
+                  </label>
+                  <a href="#access" class="text-indigo-300 hover:text-indigo-200">Forgot access?</a>
                 </div>
 
-                <button type="submit" class="btn-login">
-                  <span class="icon" aria-hidden="true">🔐</span>
-                  <span>Sign in to dashboard</span>
+                <button
+                  type="submit"
+                  class="mt-1 inline-flex w-full items-center justify-center rounded-full bg-gradient-to-r from-primary via-accent to-secondary px-4 py-2 text-xs font-semibold text-slate-50 shadow-lg shadow-indigo-900/60 hover:brightness-110"
+                >
+                  <span class="mr-1.5 text-sm" aria-hidden="true">🔐</span>
+                  Sign in to dashboard
                 </button>
               </form>
 
-              <div class="auth-divider">or</div>
+              <div class="mt-4 flex items-center space-x-2 text-[11px] text-slate-500">
+                <span class="h-px flex-1 bg-gradient-to-r from-transparent via-slate-600/70 to-transparent"></span>
+                <span>or</span>
+                <span class="h-px flex-1 bg-gradient-to-r from-transparent via-slate-600/70 to-transparent"></span>
+              </div>
 
-              <p class="auth-footnote">
-                <strong>No account yet?</strong> This dashboard is invite-only. Scroll down to request technician access.
+              <p class="mt-2 text-[11px] text-slate-400">
+                <span class="font-semibold text-slate-200">No account yet?</span>
+                This dashboard is invite-only. Scroll down to request access to the beta technician network.
               </p>
 
-              <div class="status-strip" aria-label="Approximate live job volume">
-                <span>Live jobs in queue (rolling): <span class="count">8–15 / hour</span></span>
+              <div class="mt-3 flex items-center justify-between rounded-2xl border border-emerald-400/70 bg-emerald-500/10 px-3 py-2 text-[11px] text-emerald-100">
+                <span>Live jobs in queue (rolling): <span class="font-semibold">8–15 / hour</span></span>
                 <span aria-hidden="true">🌍</span>
               </div>
             </div>
@@ -1030,185 +357,283 @@
       </div>
     </section>
 
-    <!-- FEATURES -->
-    <section class="section" id="features" aria-labelledby="features-title">
-      <div class="section-header">
-        <div class="section-eyebrow">Dashboard features</div>
-        <h2 class="section-title section-title-gradient" id="features-title">
-          Built around the way real Android techs actually work
-        </h2>
-        <p class="section-subtitle">
-          From job intake to final confirmation, every step is designed so you spend less time fiddling with tools and more time fixing devices.
-        </p>
-      </div>
+    <!-- Features -->
+    <section id="features" class="border-t border-slate-800 bg-background/80 py-16">
+      <div class="mx-auto max-w-6xl px-4 sm:px-6">
+        <div class="mx-auto max-w-3xl text-center">
+          <p class="text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-400">Dashboard features</p>
+          <h2 class="mt-2 text-2xl font-extrabold tracking-tight text-slate-50 sm:text-3xl">
+            Built around how Android techs actually work
+          </h2>
+          <p class="mt-2 text-sm text-slate-300">
+            From job intake to payout, every screen is tuned for remote Android software repair:
+            FRP, boot loops, MDM removal, soft-bricks, and more.
+          </p>
+        </div>
 
-      <div class="features-grid">
-        <article class="card">
-          <div class="card-inner">
-            <div class="card-icon" aria-hidden="true">📥</div>
-            <h3 class="card-title">Real-time job queue</h3>
-            <p class="card-body">
-              New jobs appear instantly from the customer USB client via Firebase. See device model, issue, AI confidence, and price before you claim.
-            </p>
-            <div class="pill-row" aria-label="Job queue extra details">
-              <span class="pill">AI triage & pre-pricing</span>
-              <span class="pill">Per-tech filters</span>
+        <div class="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-4 text-sm">
+          <!-- Job queue -->
+          <article class="rounded-2xl border border-slate-700 bg-slate-950/60 p-4 shadow-lg shadow-slate-950/60">
+            <div class="inline-flex h-8 w-8 items-center justify-center rounded-full bg-primary/20 text-primary">
+              📥
             </div>
-          </div>
-        </article>
+            <h3 class="mt-3 text-sm font-semibold text-slate-50">Real-time job queue</h3>
+            <p class="mt-2 text-xs text-slate-300">
+              Jobs arrive from the customer USB client with device model, AI diagnosis, confidence, and pre-set price.
+              Claim only the work you want to handle.
+            </p>
+            <div class="mt-3 flex flex-wrap gap-1.5 text-[10px] text-slate-300">
+              <span class="rounded-full border border-slate-600 px-2 py-0.5">AI triage &amp; pricing</span>
+              <span class="rounded-full border border-slate-600 px-2 py-0.5">Issue tags</span>
+            </div>
+          </article>
 
-        <article class="card">
-          <div class="card-inner">
-            <div class="card-icon" aria-hidden="true">🖥️</div>
-            <h3 class="card-title">One-click scrcpy launch</h3>
-            <p class="card-body">
-              When you claim a job, the tunnel + ADB target are already configured. Launch scrcpy with a single click in the dashboard.
-            </p>
-            <div class="pill-row">
-              <span class="pill">H.265 / high FPS</span>
-              <span class="pill">Multiple profiles</span>
+          <!-- scrcpy -->
+          <article class="rounded-2xl border border-slate-700 bg-slate-950/60 p-4 shadow-lg shadow-slate-950/60">
+            <div class="inline-flex h-8 w-8 items-center justify-center rounded-full bg-secondary/20 text-secondary">
+              🖥️
             </div>
-          </div>
-        </article>
+            <h3 class="mt-3 text-sm font-semibold text-slate-50">One-click scrcpy launch</h3>
+            <p class="mt-2 text-xs text-slate-300">
+              When you claim a job, the ngrok tunnel and ADB target are ready.
+              Start scrcpy with your preferred profile directly from the browser.
+            </p>
+            <div class="mt-3 flex flex-wrap gap-1.5 text-[10px] text-slate-300">
+              <span class="rounded-full border border-slate-600 px-2 py-0.5">H.265 / high FPS</span>
+              <span class="rounded-full border border-slate-600 px-2 py-0.5">Preset layouts</span>
+            </div>
+          </article>
 
-        <article class="card">
-          <div class="card-inner">
-            <div class="card-icon" aria-hidden="true">🎥</div>
-            <h3 class="card-title">Session recordings (optional)</h3>
-            <p class="card-body">
-              Keep recordings for quality audits, training, or dispute resolution. Toggle per-job based on sensitivity and customer consent.
-            </p>
-            <div class="pill-row">
-              <span class="pill">Encrypted at rest</span>
-              <span class="pill">Short retention windows</span>
+          <!-- Recordings -->
+          <article class="rounded-2xl border border-slate-700 bg-slate-950/60 p-4 shadow-lg shadow-slate-950/60">
+            <div class="inline-flex h-8 w-8 items-center justify-center rounded-full bg-amber-500/20 text-amber-300">
+              🎥
             </div>
-          </div>
-        </article>
+            <h3 class="mt-3 text-sm font-semibold text-slate-50">Optional session recording</h3>
+            <p class="mt-2 text-xs text-slate-300">
+              Toggle per-job recordings for QA, training, or disputes.
+              Encrypted at rest and kept only for short, configurable retention windows.
+            </p>
+            <div class="mt-3 flex flex-wrap gap-1.5 text-[10px] text-slate-300">
+              <span class="rounded-full border border-slate-600 px-2 py-0.5">Encrypted storage</span>
+              <span class="rounded-full border border-slate-600 px-2 py-0.5">Opt-in per job</span>
+            </div>
+          </article>
 
-        <article class="card">
-          <div class="card-inner">
-            <div class="card-icon" aria-hidden="true">📊</div>
-            <h3 class="card-title">Performance analytics</h3>
-            <p class="card-body">
-              Track completion rate, average handle time, issue mix, and effective hourly earnings, so you can tune your availability and specialties.
-            </p>
-            <div class="pill-row">
-              <span class="pill">Per-tech dashboard</span>
-              <span class="pill">Exportable CSV</span>
+          <!-- Metrics -->
+          <article class="rounded-2xl border border-slate-700 bg-slate-950/60 p-4 shadow-lg shadow-slate-950/60">
+            <div class="inline-flex h-8 w-8 items-center justify-center rounded-full bg-accent/20 text-accent">
+              📊
             </div>
-          </div>
-        </article>
+            <h3 class="mt-3 text-sm font-semibold text-slate-50">Performance analytics</h3>
+            <p class="mt-2 text-xs text-slate-300">
+              Track completion rate, average handle time, issue mix, and effective hourly earnings so you can tune your schedule and specialties.
+            </p>
+            <div class="mt-3 flex flex-wrap gap-1.5 text-[10px] text-slate-300">
+              <span class="rounded-full border border-slate-600 px-2 py-0.5">Per-tech dashboards</span>
+              <span class="rounded-full border border-slate-600 px-2 py-0.5">CSV export</span>
+            </div>
+          </article>
+        </div>
       </div>
     </section>
 
-    <!-- WORKFLOW / METRICS / ACCESS -->
-    <section class="section" id="workflow">
-      <div class="section-header">
-        <div class="section-eyebrow">Your day-to-day flow</div>
-        <h2 class="section-title section-title-gradient">From login to payout in a few clicks</h2>
-        <p class="section-subtitle">
-          The dashboard is designed so your workflow feels more like handling tickets in a helpdesk —
-          but wired directly into live Android devices.
-        </p>
+    <!-- Workflow / Metrics -->
+    <section id="workflow" class="border-t border-slate-800 bg-background py-16">
+      <div class="mx-auto max-w-6xl px-4 sm:px-6">
+        <div class="mx-auto max-w-3xl text-center">
+          <p class="text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-400">Day-to-day flow</p>
+          <h2 class="mt-2 text-2xl font-extrabold tracking-tight text-slate-50 sm:text-3xl">
+            From login to payout in a few focused steps
+          </h2>
+          <p class="mt-2 text-sm text-slate-300">
+            The dashboard feels like a helpdesk for Android devices — but wired straight into scrcpy sessions over secure tunnels.
+          </p>
+        </div>
+
+        <div class="mt-10 grid gap-6 md:grid-cols-3 text-sm" id="metrics">
+          <!-- Step 1 -->
+          <article class="rounded-2xl border border-slate-700 bg-slate-950/70 p-4 shadow-lg shadow-slate-950/60">
+            <div class="inline-flex h-7 w-7 items-center justify-center rounded-full bg-slate-800 text-xs font-semibold">
+              1
+            </div>
+            <h3 class="mt-3 text-sm font-semibold text-slate-50">Sign in & go available</h3>
+            <p class="mt-2 text-xs text-slate-300">
+              Log in with your technician account, flip your status to <span class="font-semibold text-slate-100">Available</span>,
+              and instantly see jobs you’re eligible to claim based on your profile.
+            </p>
+            <p class="mt-3 text-[11px] text-slate-400">
+              Status presets: <span class="font-semibold text-slate-200">Available · Busy · Off shift</span>
+            </p>
+          </article>
+
+          <!-- Step 2 -->
+          <article class="rounded-2xl border border-slate-700 bg-slate-950/70 p-4 shadow-lg shadow-slate-950/60">
+            <div class="inline-flex h-7 w-7 items-center justify-center rounded-full bg-slate-800 text-xs font-semibold">
+              2
+            </div>
+            <h3 class="mt-3 text-sm font-semibold text-slate-50">Claim, fix, close</h3>
+            <p class="mt-2 text-xs text-slate-300">
+              Claim a job, launch scrcpy, and work the device live while the customer watches.
+              When finished, mark the job as Resolved, Partial, or Failed with a short note.
+            </p>
+            <p class="mt-3 text-[11px] text-slate-400">
+              Outcomes feed back into AI pricing and routing for future jobs.
+            </p>
+          </article>
+
+          <!-- Step 3 -->
+          <article class="rounded-2xl border border-slate-700 bg-slate-950/70 p-4 shadow-lg shadow-slate-950/60">
+            <div class="inline-flex h-7 w-7 items-center justify-center rounded-full bg-slate-800 text-xs font-semibold">
+              3
+            </div>
+            <h3 class="mt-3 text-sm font-semibold text-slate-50">Review your numbers</h3>
+            <p class="mt-2 text-xs text-slate-300">
+              See breakdowns by issue type (FRP, bootloop, MDM, etc.), your repair times,
+              and actual hourly rate. Use it to specialize, train, and negotiate better terms.
+            </p>
+            <p class="mt-3 text-[11px] text-slate-400">
+              You own your personal productivity data — we keep the platform stable and secure.
+            </p>
+          </article>
+        </div>
       </div>
+    </section>
 
-      <div class="features-grid" id="metrics">
-        <article class="card">
-          <div class="card-inner">
-            <div class="card-icon" aria-hidden="true">1️⃣</div>
-            <h3 class="card-title">Sign in & go available</h3>
-            <p class="card-body">
-              Log in with your technician account, flip your status to “Available,” and instantly start seeing jobs you’re eligible to claim.
+    <!-- Access / Apply -->
+    <section id="access" class="border-t border-slate-800 bg-slate-950 py-16">
+      <div class="mx-auto max-w-5xl px-4 sm:px-6">
+        <div class="grid gap-10 md:grid-cols-2 md:items-start">
+          <!-- Left: copy -->
+          <div>
+            <p class="text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-400">Access & onboarding</p>
+            <h2 class="mt-2 text-2xl font-extrabold tracking-tight text-slate-50 sm:text-3xl">
+              Request access to the iTECHMobile technician network
+            </h2>
+            <p class="mt-3 text-sm text-slate-300">
+              We’re currently onboarding a small cohort of experienced Android repair professionals to refine flows,
+              validate playbooks, and stress-test the tech stack.
             </p>
-            <div class="card-footer">
-              Status presets: <strong>Available · Busy · Off shift</strong>
-            </div>
-          </div>
-        </article>
 
-        <article class="card">
-          <div class="card-inner">
-            <div class="card-icon" aria-hidden="true">2️⃣</div>
-            <h3 class="card-title">Claim, fix, close</h3>
-            <p class="card-body">
-              Claim a job, launch scrcpy, and work the device while the customer watches. When you’re done, mark the job as Resolved, Partial, or Failed.
-            </p>
-            <div class="card-footer">
-              Outcome tracking feeds back into AI pricing & routing.
-            </div>
+            <ol class="mt-5 space-y-3 text-sm text-slate-200">
+              <li class="flex items-start space-x-3">
+                <span class="mt-0.5 flex h-5 w-5 items-center justify-center rounded-full bg-slate-800 text-[11px]">1</span>
+                <div>
+                  <p class="font-semibold">Apply & share your background</p>
+                  <p class="text-xs text-slate-400">
+                    Email us with your repair history, shop details, and the types of Android software issues you handle most.
+                  </p>
+                </div>
+              </li>
+              <li class="flex items-start space-x-3">
+                <span class="mt-0.5 flex h-5 w-5 items-center justify-center rounded-full bg-slate-800 text-[11px]">2</span>
+                <div>
+                  <p class="font-semibold">Onboard & whitelist</p>
+                  <p class="text-xs text-slate-400">
+                    If approved, we’ll whitelist your work email, walk you through the dashboard, and set up scrcpy profiles.
+                  </p>
+                </div>
+              </li>
+              <li class="flex items-start space-x-3">
+                <span class="mt-0.5 flex h-5 w-5 items-center justify-center rounded-full bg-slate-800 text-[11px]">3</span>
+                <div>
+                  <p class="font-semibold">Claim jobs & get paid</p>
+                  <p class="text-xs text-slate-400">
+                    Once live, you can claim pre-diagnosed, pre-paid jobs and start earning from remote repairs worldwide.
+                  </p>
+                </div>
+              </li>
+            </ol>
           </div>
-        </article>
 
-        <article class="card">
-          <div class="card-inner">
-            <div class="card-icon" aria-hidden="true">3️⃣</div>
-            <h3 class="card-title">Review your numbers</h3>
-            <p class="card-body">
-              See your repair mix (FRP, bootloop, MDM, etc.), your average times, and success rates. Use it to specialize, train, and negotiate better terms.
+          <!-- Right: email details card -->
+          <div class="rounded-3xl border border-slate-700 bg-slate-950/70 p-6 shadow-xl shadow-slate-950/60">
+            <h3 class="text-sm font-semibold text-slate-50">What to include in your email</h3>
+            <p class="mt-2 text-xs text-slate-300">
+              Send a short introduction to:
             </p>
-            <div class="card-footer">
-              You keep your personal productivity data. We keep the platform stable.
-            </div>
-          </div>
-        </article>
+            <p class="mt-1 text-xs font-semibold text-indigo-300">
+              <a href="mailto:itechinfomtl@gmail.com?subject=Technician%20Application%20for%20iTECHMobile" class="underline underline-offset-2">
+                itechinfomtl@gmail.com
+              </a>
+            </p>
 
-        <article class="card" id="access">
-          <div class="card-inner">
-            <div class="card-icon" aria-hidden="true">🔐</div>
-            <h3 class="card-title">Request technician access</h3>
-            <p class="card-body">
-              We currently onboard a small group of repair pros to validate flows, refine playbooks, and stress test the tech stack.
+            <ul class="mt-4 space-y-2 text-xs text-slate-300">
+              <li class="flex items-start space-x-2">
+                <span class="mt-0.5 text-accent" aria-hidden="true">•</span>
+                <span>Your name and repair shop / brand</span>
+              </li>
+              <li class="flex items-start space-x-2">
+                <span class="mt-0.5 text-accent" aria-hidden="true">•</span>
+                <span>Years of hands-on Android repair experience</span>
+              </li>
+              <li class="flex items-start space-x-2">
+                <span class="mt-0.5 text-accent" aria-hidden="true">•</span>
+                <span>Types of software issues you handle most (FRP, MDM, boot loops, custom ROM, etc.)</span>
+              </li>
+              <li class="flex items-start space-x-2">
+                <span class="mt-0.5 text-accent" aria-hidden="true">•</span>
+                <span>Your preferred working hours and timezone</span>
+              </li>
+            </ul>
+
+            <a
+              href="mailto:itechinfomtl@gmail.com?subject=Technician%20Application%20for%20iTECHMobile"
+              class="mt-6 inline-flex w-full items-center justify-center rounded-full bg-primary px-4 py-2 text-xs font-semibold text-white shadow-lg shadow-indigo-900/60 hover:bg-indigo-500"
+            >
+              Email to apply
+            </a>
+
+            <p class="mt-3 text-[11px] text-slate-500">
+              We’re especially interested in high-volume shops and specialists in FRP, MDM, and carrier unlock workflows.
             </p>
-            <div class="card-footer">
-              To request access, email:
-              <br>
-              <a href="mailto:itechinfomtl@gmail.com" class="link">itechinfomtl@gmail.com</a><br>
-              and include:
-              <ul style="margin:6px 0 0 16px; padding-left:0; color:#cbd5e1; font-size:11px;">
-                <li>Your name &amp; repair shop / brand</li>
-                <li>Years of Android repair experience</li>
-                <li>What types of software issues you handle most</li>
-                <li>Your preferred working hours &amp; timezone</li>
-              </ul>
-            </div>
           </div>
-        </article>
+        </div>
       </div>
     </section>
   </main>
 
-  <footer>
-    <div class="footer-inner">
-      <span>© 2025 iTECHMobile – Technician Dashboard • Built by iD01t Productions (Guillaume Lessard)</span>
-      <span>
-        Main site: <a href="https://itechmobile.site">itechmobile.site</a> ·
-        Privacy &amp; terms: <a href="https://itechmobile.site/docs/privacy.html">Privacy</a> / <a href="https://itechmobile.site/docs/terms.html">Terms</a>
-      </span>
+  <!-- Footer -->
+  <footer class="border-t border-slate-800 bg-background py-6">
+    <div class="mx-auto flex max-w-6xl flex-col items-start justify-between space-y-3 px-4 text-[11px] text-slate-400 sm:flex-row sm:items-center sm:space-y-0">
+      <div>
+        <p>© 2025 iTECHMobile — Technician Dashboard · Built by iD01t Productions (Guillaume Lessard)</p>
+        <p class="mt-1">Production Master v14.0 · Technician Frontend</p>
+      </div>
+      <div class="space-x-3">
+        <a href="https://itechmobile.site" class="text-indigo-300 hover:text-indigo-200">Main site</a>
+        <span class="text-slate-600">·</span>
+        <a href="https://itechmobile.site/docs/privacy.html" class="text-indigo-300 hover:text-indigo-200" target="_blank" rel="noopener noreferrer">Privacy</a>
+        <span class="text-slate-600">/</span>
+        <a href="https://itechmobile.site/docs/terms.html" class="text-indigo-300 hover:text-indigo-200" target="_blank" rel="noopener noreferrer">Terms</a>
+      </div>
     </div>
   </footer>
 
   <script>
+    // Mobile nav toggle
     const hamburger = document.getElementById('hamburger');
     const navLinks = document.getElementById('nav-links');
 
     if (hamburger && navLinks) {
       hamburger.addEventListener('click', () => {
-        const isOpen = hamburger.classList.toggle('open');
-        navLinks.classList.toggle('open');
+        const isOpen = navLinks.classList.toggle('open');
         hamburger.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
       });
 
       navLinks.querySelectorAll('a').forEach(link => {
         link.addEventListener('click', () => {
-          hamburger.classList.remove('open');
-          navLinks.classList.remove('open');
-          hamburger.setAttribute('aria-expanded', 'false');
+          if (navLinks.classList.contains('open')) {
+            navLinks.classList.remove('open');
+            hamburger.setAttribute('aria-expanded', 'false');
+          }
         });
       });
     }
 
-    console.log('%c iTECHMobile Technician Dashboard ', 'background: linear-gradient(135deg,#667eea,#22c55e); color: #020617; font-size: 16px; padding: 6px 10px; font-weight: 800; border-radius: 999px;');
-    console.log('%c Production Master v11.0 | Dashboard Frontend ', 'color:#4ade80; font-size:12px; font-weight:600;');
+    // Console branding
+    console.log('%c iTECHMobile Technician Dashboard ', 'background: linear-gradient(135deg,#667eea,#10b981); color: #020617; font-size: 16px; padding: 6px 10px; font-weight: 800; border-radius: 999px;');
+    console.log('%c Production Master v14.0 | Technician Frontend ', 'color:#4ade80; font-size:12px; font-weight:600;');
     console.log('%c Built by iD01t Productions (Guillaume Lessard) ', 'color:#93c5fd; font-size:11px;');
   </script>
 </body>
